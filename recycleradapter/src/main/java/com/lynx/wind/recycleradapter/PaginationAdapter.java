@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-abstract public class LoadMoreAdapter<Holder extends RecyclerView.ViewHolder, DataClass>
+abstract public class PaginationAdapter<Holder extends RecyclerView.ViewHolder, DataClass>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Activity activity;
@@ -29,7 +29,7 @@ abstract public class LoadMoreAdapter<Holder extends RecyclerView.ViewHolder, Da
     private static int TAG_DATA = 1;
     private LoadState state = LoadState.LOAD_NEXT;
 
-    public LoadMoreAdapter(Class<Holder> holder, int itemView, int loadingView, List<DataClass> data) {
+    public PaginationAdapter(Class<Holder> holder, int itemView, int loadingView, List<DataClass> data) {
         this.holder = holder;
         this.itemView = itemView;
         this.data = ((List<Object>)data);

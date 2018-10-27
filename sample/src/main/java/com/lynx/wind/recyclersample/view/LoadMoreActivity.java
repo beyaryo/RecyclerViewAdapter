@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.lynx.wind.recycleradapter.LoadMoreAdapter;
+import com.lynx.wind.recycleradapter.PaginationAdapter;
 import com.lynx.wind.recyclersample.R;
 import com.lynx.wind.recyclersample.holder.SimpleHolder;
 import com.lynx.wind.recyclersample.model.User;
@@ -18,7 +18,7 @@ import java.util.TimerTask;
 
 public class LoadMoreActivity extends AppCompatActivity {
 
-    private LoadMoreAdapter<SimpleHolder, User> adapter = new LoadMoreAdapter<SimpleHolder, User>(
+    private PaginationAdapter<SimpleHolder, User> adapter = new PaginationAdapter<SimpleHolder, User>(
             SimpleHolder.class, R.layout.item_user, R.layout.item_loading, new ArrayList<User>()) {
         @Override
         public void onBind(SimpleHolder holder, User data, int Index) {

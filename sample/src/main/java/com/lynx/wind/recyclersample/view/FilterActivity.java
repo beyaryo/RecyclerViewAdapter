@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -62,19 +64,22 @@ public class FilterActivity extends AppCompatActivity {
 
             @Override
             public void onFilterResult(int count) {
-                Toast.makeText(FilterActivity.this, "Found $count user's", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FilterActivity.this, "Found " +count+ " user's", Toast.LENGTH_SHORT).show();
             }
         });
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ((FilterAdapter)recyclerView.getAdapter())
-                            .getFilter()
-                            .filter(editText.getText().toString());
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ((FilterAdapter)recyclerView.getAdapter())
+                        .getFilter()
+                        .filter(s.toString());
             }
         });
     }
