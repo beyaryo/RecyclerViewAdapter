@@ -15,6 +15,7 @@ import java.util.List;
 abstract public class LoadMoreAdapter<Holder extends RecyclerView.ViewHolder, DataClass>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private Activity activity;
     private Class<Holder> holder;
     private int itemView;
     private int loadingView;
@@ -37,7 +38,8 @@ abstract public class LoadMoreAdapter<Holder extends RecyclerView.ViewHolder, Da
         this.data.add(state);
     }
 
-    public void setRecyclerView(RecyclerView recyclerView, final int threshold){
+    public void setRecyclerView(Activity activity, RecyclerView recyclerView, final int threshold){
+        this.activity = activity;
         final LinearLayoutManager layoutManager =
                 new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -99,10 +101,24 @@ abstract public class LoadMoreAdapter<Holder extends RecyclerView.ViewHolder, Da
         else return TAG_DATA;
     }
 
-    public void setState(Activity activity, final LoadState state) {
+    public void load(){
+        setState(LoadState.LOAD_NEXT);
+    }
+
+    public void loadError(){
+        setState(LoadState.ERROR);
+    }
+
+    public void loadEnd(){
+        setState(LoadState.END);
+    }
+
+    public void refresh(List<DataClass> newData){
         this.data.remove(data.size()-1);
-        this.state = state;
+        this.state = LoadState.LOAD_NEXT;
+        this.data.addAll(newData);
         this.data.add(this.state);
+
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -111,12 +127,10 @@ abstract public class LoadMoreAdapter<Holder extends RecyclerView.ViewHolder, Da
         });
     }
 
-    public void refresh(Activity activity, List<DataClass> newData){
+    private void setState(final LoadState state) {
         this.data.remove(data.size()-1);
-        this.state = LoadState.LOAD_NEXT;
-        this.data.addAll(newData);
+        this.state = state;
         this.data.add(this.state);
-
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
