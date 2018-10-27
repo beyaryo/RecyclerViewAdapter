@@ -124,6 +124,7 @@ When you gain the data, you should call
 adapter.refresh(newData);
 ```
 **IMPORTANT!!** ``newData`` is a new list contain your new data. Use this method instead of `notifyDataSetChanged()`.
+
 When you got error when load data, call 
 ```java
 adapter.loadError();
@@ -136,7 +137,7 @@ When you can't get data anymore
 ```java
 adapter.loadEnd();
 ```
-That's all, easy right.
+That's all, easy right. For more info, try the sample project.
 ## Inspired By
 - [NFramework](https://github.com/noizar/Nframework)
 ## License
