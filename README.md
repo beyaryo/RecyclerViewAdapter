@@ -20,6 +20,15 @@ dependencies {
    implementation 'com.github.beyaryo:RecyclerViewAdapter:1.0.1'
 }
 ```
+Or if you want to use your own `com.android.support` version
+```
+dependencies {
+   implementation ('com.github.beyaryo:RecyclerViewAdapter:1.0.1'){
+      exclude group: 'com.android.support', module: 'recyclerview-v7'
+      exclude group: 'com.android.support', module: 'appcompat-v7'
+   }
+}
+```
 
 There are 3 kinds of adapter in this library
 ## 1. RecyclerAdapter
