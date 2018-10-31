@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_load).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoadMoreActivity.class));
+                startActivity(new Intent(MainActivity.this, PaginationActivity.class));
             }
         });
     }

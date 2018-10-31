@@ -17,7 +17,7 @@ allprojects {
 Add dependecies to your module-level `build.gradle`:
 ```
 dependencies {
-   implementation 'com.github.beyaryo:RecyclerViewAdapter:1.0.0'
+   implementation 'com.github.beyaryo:RecyclerViewAdapter:1.0.1'
 }
 ```
 
@@ -43,18 +43,34 @@ Don't forget to create a layout for your item.
 Finally you can use the adapter to your `RecyclerView` :
 ```java
 RecyclerView recyclerView = findViewById(your_recyclerview_id);
-recyclerView.setAdapter(new RecyclerAdapter<SimpleHolder, User>(SimpleHolder.class, your_item_layout_id, your_list) {
+recyclerView.setAdapter(new RecyclerAdapter<SimpleHolder, User>(SimpleHolder.class, your_list, your_item_layout_id) {
     @Override
     public void onBind(SimpleHolder holder, User data, int Index) {
 	// Do everything you want when the holder binded
     }
 });
 ```
+If you want to add header on your `RecyclerView`, just add your header layout in the parameter
+```java
+RecyclerView recyclerView = findViewById(your_recyclerview_id);
+recyclerView.setAdapter(new RecyclerAdapter<SimpleHolder, User>(SimpleHolder.class, your_list, your_item_layout_id, your_header_layout_id) {
+    @Override
+    public void onBind(SimpleHolder holder, User data, int Index) {
+	// Do everything you want when the holder binded
+    }
+    
+    @Override
+    public void onHeaderBind(View itemView) {
+        // Do something here when header binded
+    }
+});
+```
+All adapter support using header.
 ## 2. FilterAdapter
 It's like adapter #1, but you can filter the data.
 ```java
 RecyclerView recyclerView = findViewById(your_recyclerview_id);
-recyclerView.setAdapter(new FilterAdapter<SimpleHolder, User>(SimpleHolder.class, your_item_layout_id, your_list) {
+recyclerView.setAdapter(new FilterAdapter<SimpleHolder, User>(SimpleHolder.class, your_list, your_item_layout_id) {
     @Override
     public void onBind(SimpleHolder holder, User data, int Index) {
 	// Do everything you want when the holder binded
@@ -95,7 +111,7 @@ With this adapter you can handle *load more-thing* list with less effort.
 First create the adapter
 ```java
 private PaginationAdapter<SimpleHolder, User> adapter = new PaginationAdapter<SimpleHolder, User>(
-        SimpleHolder.class, your_item_layout_id, your_loading_layout_id, new ArrayList<User>()) {
+        SimpleHolder.class, new ArrayList<User>(), your_item_layout_id, your_loading_layout_id) {
     @Override
     public void onBind(SimpleHolder holder, User data, int Index) {
         // Do everything you want when the holder binded

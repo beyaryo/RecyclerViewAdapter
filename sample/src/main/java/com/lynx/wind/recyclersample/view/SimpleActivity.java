@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.lynx.wind.recycleradapter.RecyclerAdapter;
 import com.lynx.wind.recyclersample.R;
@@ -40,10 +41,15 @@ public class SimpleActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.list);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new RecyclerAdapter<SimpleHolder, User>(SimpleHolder.class, R.layout.item_user, data) {
+        recyclerView.setAdapter(new RecyclerAdapter<SimpleHolder, User>(SimpleHolder.class, data, R.layout.item_user, R.layout.item_header) {
             @Override
             public void onBind(SimpleHolder holder, User data, int Index) {
                 holder.bind(data);
+            }
+
+            @Override
+            public void onHeaderBind(View itemView) {
+                // Do something here when header binded
             }
         });
     }

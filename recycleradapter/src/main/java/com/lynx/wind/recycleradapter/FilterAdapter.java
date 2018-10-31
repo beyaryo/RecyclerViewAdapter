@@ -1,5 +1,6 @@
 package com.lynx.wind.recycleradapter;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,29 +9,54 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
 abstract public class FilterAdapter<Holder extends RecyclerView.ViewHolder, DataClass>
-        extends RecyclerView.Adapter<Holder> implements Filterable {
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     private Class<Holder> holder;
     private int itemView;
+    private int headerView = -1;
     private List<DataClass> data;
     private List<DataClass> filterData;
 
-    public FilterAdapter(Class<Holder> holder, int itemView, List<DataClass> data) {
+    private static int TAG_HEADER = 0;
+    private static int TAG_DATA = 1;
+
+    public FilterAdapter(Class<Holder> holder, List<DataClass> data, int itemView) {
         this.holder = holder;
         this.itemView = itemView;
         this.data = data;
         this.filterData = this.data;
     }
 
+    public FilterAdapter(Class<Holder> holder, List<DataClass> data, int itemView, int headerView) {
+        this.holder = holder;
+        this.itemView = itemView;
+        this.headerView = headerView;
+        this.data = data;
+        this.filterData = this.data;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (headerView != -1 && position == 0) return TAG_HEADER;
+        else return TAG_DATA;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (headerView == -1) return filterData.size();
+        else return filterData.size() + 1;
+    }
+
     @Nullable
     @Override
-    public Holder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TAG_HEADER)
+            return new DefaultHolder(LayoutInflater.from(parent.getContext()).inflate(headerView, parent, false));
+
         try {
             return holder
                     .getConstructor(View.class)
@@ -41,13 +67,17 @@ abstract public class FilterAdapter<Holder extends RecyclerView.ViewHolder, Data
     }
 
     @Override
-    public void onBindViewHolder(@Nullable Holder holder, int position) {
-        if (holder != null) onBind(holder, filterData.get(position), position);
-    }
-
-    @Override
-    public int getItemCount() {
-        return filterData.size();
+    public void onBindViewHolder(@Nullable RecyclerView.ViewHolder holder, int position) {
+        try {
+            if (headerView == -1)
+                onBind((Holder) holder, filterData.get(position), position);
+            else if (headerView != -1 && position != 0)
+                onBind((Holder) holder, filterData.get(position - 1), position - 1);
+            else
+                onHeaderBind(holder.itemView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -85,7 +115,18 @@ abstract public class FilterAdapter<Holder extends RecyclerView.ViewHolder, Data
         };
     }
 
+    public void onHeaderBind(View itemView) {
+    }
+
     public abstract void onBind(Holder holder, DataClass data, int Index);
+
     public abstract boolean onFiltering(String comparator, DataClass comparedBy);
+
     public abstract void onFilterResult(int count);
+
+    private class DefaultHolder extends RecyclerView.ViewHolder {
+        private DefaultHolder(View itemView) {
+            super(itemView);
+        }
+    }
 }

@@ -51,7 +51,7 @@ public class FilterActivity extends AppCompatActivity {
         editText = findViewById(R.id.query);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new FilterAdapter<SimpleHolder, User>(SimpleHolder.class, R.layout.item_user, data) {
+        recyclerView.setAdapter(new FilterAdapter<SimpleHolder, User>(SimpleHolder.class, data, R.layout.item_user, R.layout.item_header) {
             @Override
             public void onBind(SimpleHolder holder, User data, int Index) {
                 holder.bind(data);

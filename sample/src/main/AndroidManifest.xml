@@ -24,7 +24,7 @@
         <activity android:name=".view.FilterActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.LoadMoreActivity"
+        <activity android:name=".view.PaginationActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
     </application>
