@@ -17,7 +17,16 @@ allprojects {
 Add dependecies to your module-level `build.gradle`:
 ```
 dependencies {
-   implementation 'com.github.beyaryo:RecyclerViewAdapter:1.0.1'
+   implementation 'com.github.beyaryo:RecyclerViewAdapter:1.0.2'
+}
+```
+Or if you want to use your own `com.android.support` version
+```
+dependencies {
+   implementation ('com.github.beyaryo:RecyclerViewAdapter:1.0.2'){
+      exclude group: 'com.android.support', module: 'recyclerview-v7'
+      exclude group: 'com.android.support', module: 'appcompat-v7'
+   }
 }
 ```
 

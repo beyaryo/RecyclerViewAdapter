@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.lynx.wind.recycleradapter.PaginationAdapter;
@@ -20,8 +19,12 @@ import java.util.TimerTask;
 
 public class PaginationActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private ArrayList<User> users = new ArrayList<>();
+    private SwipeRefreshLayout swiper;
+    private boolean tempError = true;
+
     private PaginationAdapter<SimpleHolder, User> adapter = new PaginationAdapter<SimpleHolder, User>(
-            SimpleHolder.class, new ArrayList<User>(), R.layout.item_user, R.layout.item_loading, R.layout.item_header) {
+            SimpleHolder.class, users, R.layout.item_user, R.layout.item_loading, R.layout.item_header) {
         @Override
         public void onBind(SimpleHolder holder, User data, int Index) {
             holder.bind(data);
@@ -40,7 +43,7 @@ public class PaginationActivity extends AppCompatActivity implements SwipeRefres
             itemView.findViewById(R.id.btn_retry).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    adapter.load();
+                    adapter.loadNext();
                 }
             });
         }
@@ -51,13 +54,8 @@ public class PaginationActivity extends AppCompatActivity implements SwipeRefres
         }
 
         @Override
-        public void onHeaderBind(View itemView) {
-
-        }
+        public void onHeaderBind(View itemView) { }
     };
-
-    private SwipeRefreshLayout swiper;
-    private boolean tempError = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,17 +75,17 @@ public class PaginationActivity extends AppCompatActivity implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        Log.d("TAG", "This is refresh");
+        adapter.pause();
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                ArrayList<User> newData = new ArrayList<>();
+                users.clear();
 
                 for (int i = 0; i < 20; i++)
-                    newData.add(new User(i, "User Name-" + i));
+                    users.add(new User(i, "User Name-" + i));
 
-                adapter.refresh(newData, true);
+                adapter.refresh(true);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -106,23 +104,19 @@ public class PaginationActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private void loadData(final int offset) {
-        Log.d("TAG", "This is load => offset " + offset);
-
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (tempError && offset > 50) {
-                    adapter.loadError();
+                    adapter.error();
                     tempError = false;
                 } else if (offset > 100) {
-                    adapter.loadEnd();
+                    adapter.end();
                 } else {
-                    ArrayList<User> newData = new ArrayList<>();
-
                     for (int i = offset; i < offset + 20; i++)
-                        newData.add(new User(i, "User Name-" + i));
+                        users.add(new User(i, "User Name-" + i));
 
-                    adapter.refresh(newData);
+                    adapter.refresh();
                 }
             }
         }, 2500);

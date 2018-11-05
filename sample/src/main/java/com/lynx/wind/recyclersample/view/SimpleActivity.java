@@ -56,6 +56,6 @@ public class SimpleActivity extends AppCompatActivity {
 
     private void dummyData() {
         for (int i = 0; i < 10; i++)
-            data.add(new User(i, "User Name-$i"));
+            data.add(new User(i, "User Name-"+i));
     }
 }
